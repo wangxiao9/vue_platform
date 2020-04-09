@@ -8,17 +8,17 @@
       </div>
       <!--登录表单-->
       <div>
-        <el-form class="loginForm">
-          <el-form-item>
-            <el-input prefix-icon="el-icon-user"></el-input>
+        <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRule" class="loginForm">
+          <el-form-item prop="username">
+            <el-input v-model="loginForm.username" prefix-icon="el-icon-user"></el-input>
           </el-form-item>
-          <el-form-item>
-            <el-input prefix-icon="el-icon-lock"></el-input>
+          <el-form-item prop="password">
+            <el-input v-model="loginForm.password" type="password" prefix-icon="el-icon-lock"></el-input>
           </el-form-item>
           <!--按钮-->
           <el-form-item class="btns">
             <el-button type="primary">登录</el-button>
-            <el-button type="info">重置</el-button>
+            <el-button type="info" @click="resetForm">重置</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -27,7 +27,31 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      loginForm: {
+        username:'',
+        password:''
+      },
+      loginFormRule: {
+        username: [
+          {required:true, message:'请输入用户名', trigger:'blur'}
+        ],
+        password: [
+          {required:true, message:'请输入密码', trigger:'blur'}
+        ]
+      }
+    }
+  },
+  methods:{
+    // 重置
+    resetForm() {
+      console.log(this)
+      this.$refs.loginFormRef.resetFields()
+    }
+  }
+};
 </script>
 
 <style lang="less" scoped>
