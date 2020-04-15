@@ -11,6 +11,8 @@ const routes = [
   },
   {
     path: '/login',
+    name: 'Login',
+    meta: { index: 0 },
     component: Login
   }
 ]
