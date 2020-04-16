@@ -14,15 +14,15 @@
         <!--登录表单-->
         <div>
           <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRule" class="loginForm">
-            <el-form-item prop="username">
-              <el-input v-model="loginForm.username" prefix-icon="el-icon-user"></el-input>
+            <el-form-item prop="account">
+              <el-input v-model="loginForm.account" prefix-icon="el-icon-user"></el-input>
             </el-form-item>
             <el-form-item prop="password">
               <el-input v-model="loginForm.password" type="password" prefix-icon="el-icon-lock"></el-input>
             </el-form-item>
             <!--按钮-->
             <el-form-item class="btns">
-              <el-button type="primary">登录</el-button>
+              <el-button type="primary" @click="login">登录</el-button>
               <el-button type="info" @click="resetForm">重置</el-button>
             </el-form-item>
           </el-form>
@@ -72,13 +72,11 @@ export default {
   data() {
     return {
       loginForm: {
-        username: "",
+        account: "",
         password: ""
       },
       loginFormRule: {
-        username: [
-          { required: true, message: "请输入用户名", trigger: "blur" }
-        ],
+        account: [{ required: true, message: "请输入用户名", trigger: "blur" }],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }]
       },
       show: true,
@@ -100,7 +98,36 @@ export default {
     // 登录重置
     resetForm() {
       console.log(this);
-      this.$refs.loginFormRef.resetFields();
+      this.$refs.loginFormRef.resetFields()
+    },
+    // 登录
+    login() {
+      /**
+       * 1. 登录：用户名+密码 用户名：邮箱
+       * 2. 登录成功后，把token存入本地seesion中，并且跳转到home页面
+       * 3. 登录失败，提示登录失败，并且清空输入框
+       */
+      this.$refs.loginFormRef.validate(async valid => {
+        if (!valid) return;
+        await this.$http
+          .post("token", this.loginForm)
+          .then(res => {
+            console.log(res.data);
+            this.$message.success("登录成功")
+            // 1. 将token存入sessionStorage
+            window.sessionStorage.setItem('token', res.data.token)
+            // 跳转到home页面
+            this.$router.push('/home')
+          })
+          .catch(error => {
+            if (error.response.status == 401) {
+              console.log("登录失败")
+            } else {
+              this.$message.error("登录失败")
+              this.$refs.loginFormRef.resetFields()
+            }
+          })
+      })
     },
     // 注册重置
     resetRegisterForm() {
@@ -114,16 +141,19 @@ export default {
        * 3. 注册成功后，提示注册成功，并且跳转到登录页面
        */
       this.$refs.registerFormRef.validate(async valid => {
-        if (!valid) return;
-        const { data: res } = await this.$http.post(
-          "register",
-          this.registerForm
-        );
-        this.$refs.registerFormRef.resetFields();
-        if (res.error_code !== 0) return this.$message.error("注册失败");
-        // this.$message.success("注册成功");
-        this._data.show = true;
-      });
+        if (!valid) return
+        await this.$http
+          .post("register", this.registerForm)
+          .then(res => {
+            this.$message.success("注册成功")
+            this.$refs.registerFormRef.resetFields()
+            this._data.show = true
+          })
+          .catch(error => {
+            this.$message.error("注册失败")
+            this.$refs.registerFormRef.resetFields()
+          })
+      })
     }
   }
 };
@@ -142,9 +172,11 @@ export default {
   border: 1px solid;
   border-radius: 2%;
   position: absolute;
-  left: 50%;
-  top: 50%;
-
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: auto;
   .logo_box {
     height: 130px;
     width: 130px;
