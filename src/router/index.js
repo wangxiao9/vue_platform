@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../components/Login.vue'
 import Home from '../components/Home.vue'
+import User from '../components/user/User.vue'
 
 Vue.use(VueRouter)
 
@@ -17,9 +18,12 @@ const routes = [
     component: Login
   },
   {
-    path:'/home',
+    path: '/home',
     name: 'Home',
-    component:Home
+    component: Home,
+    children: [
+      { path: '/user', component: User }
+    ]
   }
 ]
 
@@ -34,9 +38,9 @@ router.beforeEach((to, from, next) => {
    * from: 从哪个路径挑战
    * next: 放行
    */
-  if(to.path === '/login') return next()
+  if (to.path === '/login') return next()
   const tokenStr = window.sessionStorage.getItem('token')
-  if(!tokenStr) return next('/login')
+  if (!tokenStr) return next('/login')
   next()
 })
 
