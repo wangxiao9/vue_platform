@@ -10,13 +10,13 @@
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-menu"></i>
-              <span>用户管理</span>
+              <span>项目管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/user">
+              <el-menu-item index="/project">
                 <template slot="title">
                   <i class="el-icon-menu"></i>
-                  <span>用户列表</span>
+                  <span>项目列表</span>
                 </template>
               </el-menu-item>
             </el-menu-item-group>

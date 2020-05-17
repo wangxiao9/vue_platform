@@ -6,7 +6,7 @@ import './assets/css/global.css'
 import axios from 'axios'
 
 // 配置后端api接口路径
-axios.defaults.baseURL = 'http://127.0.0.1:5000/v1'
+axios.defaults.baseURL = 'http://127.0.0.1:8085/v1'
 
 // 挂载Vue全局对象
 Vue.prototype.$http = axios
