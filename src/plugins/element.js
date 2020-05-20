@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Button, Form, MessageBox } from 'element-ui'
+import { Button, Form, MessageBox, Card } from 'element-ui'
 import { FormItem } from 'element-ui'
 import {
      Input,
@@ -13,7 +13,10 @@ import {
      Menu,
      MenuItem,
      MenuItemGroup,
-     Submenu
+     Submenu,
+     Breadcrumb,
+     BreadcrumbItem,
+     Row
 
 }
 from 'element-ui'
@@ -32,7 +35,10 @@ Vue.use(Menu)
 Vue.use(MenuItem)
 Vue.use(MenuItemGroup)
 Vue.use(Submenu)
-
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
+Vue.use(Card)
+Vue.use(Row)
 
 
 // 挂载弹框属性到全局变量中
