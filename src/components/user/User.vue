@@ -25,10 +25,21 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      // 获取列表参数对象
+      queryInfo: {}
+    };
   },
-  methods: {},
-  created: {}
+  // 请求
+  created() {
+    this.getUsersList();
+  },
+  methods: {
+    async getUsersList() {
+      const { data:res } = await this.$http.get('users')
+      console.log(res)
+    }
+  }
 };
 </script>
 
