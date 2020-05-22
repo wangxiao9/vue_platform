@@ -16,7 +16,12 @@ import {
      Submenu,
      Breadcrumb,
      BreadcrumbItem,
-     Row
+     Row,
+     Table,
+     TableColumn,
+     Switch,
+     Tooltip,
+     Pagination
 
 }
 from 'element-ui'
@@ -39,7 +44,11 @@ Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
 Vue.use(Card)
 Vue.use(Row)
-
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Switch)
+Vue.use(Tooltip)
+Vue.use(Pagination)
 
 // 挂载弹框属性到全局变量中
 Vue.prototype.$message = Message

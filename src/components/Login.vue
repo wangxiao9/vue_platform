@@ -72,8 +72,8 @@ export default {
   data() {
     return {
       loginForm: {
-        account: "",
-        password: ""
+        account: "wangxiao@qq.com",
+        password: "123456"
       },
       loginFormRule: {
         account: [{ required: true, message: "请输入用户名", trigger: "blur" }],
