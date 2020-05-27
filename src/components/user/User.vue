@@ -11,12 +11,12 @@
       <!--搜索，添加用户-->
       <el-row :gutter="15">
         <el-col :span="8">
-          <el-input placeholder="请输入内容">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input placeholder="请输入内容" v-model="searchData" clearable @clear="getUsersList">
+            <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary">添加用户</el-button>
+          <el-button type="primary" @click="addDialogVisible =true">添加用户</el-button>
         </el-col>
       </el-row>
       <!--table-->
@@ -41,9 +41,19 @@
           <!--操作button-->
           <template slot-scope="scope">
             <!-- <el-tooltip class="item" content="编辑" placement="top" :enterable="false"> -->
-            <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              size="mini"
+              @click="showEditUserDialog(scope.row.id)"
+            ></el-button>
             <!-- <el-tooltip class="item" content="删除" placement="top" :enterable="false"> -->
-            <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              size="mini"
+              @click="deleteUser(scope.row.id)"
+            ></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -58,10 +68,56 @@
         :total="total"
       ></el-pagination>
     </el-card>
+    <!--新增用户dialog对话框-->
+    <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="40%" @close="closeDialog">
+      <el-form
+        ref="addUserFormRef"
+        :rules="addUserFormRule"
+        :model="addUserForm"
+        label-width="100px"
+      >
+        <el-form-item prop="account" label="邮箱">
+          <el-input v-model="addUserForm.account"></el-input>
+        </el-form-item>
+        <el-form-item prop="nickname" label="用户名">
+          <el-input v-model="addUserForm.nickname"></el-input>
+        </el-form-item>
+        <el-form-item prop="password" label="密码">
+          <el-input v-model="addUserForm.password" type="password"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addUser">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!--编辑用户dialog对话框-->
+    <el-dialog title="编辑用户" :visible.sync="editDialogVisible" width="40%" @close="closeEditDialog">
+      <el-form
+        ref="editUserFormRef"
+        :rules="editUserFormRule"
+        :model="editUserForm"
+        label-width="100px"
+      >
+        <el-form-item prop="account" label="邮箱">
+          <el-input v-model="editUserForm.email"></el-input>
+        </el-form-item>
+        <el-form-item prop="nickname" label="用户名">
+          <el-input v-model="editUserForm.nickname"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editUser">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { strictEqual } from "assert";
+import { userInfo } from "os";
 export default {
   data() {
     return {
@@ -75,7 +131,31 @@ export default {
       // 用户列表
       userList: [],
       // 总共多少条用户
-      total: 0
+      total: 0,
+      searchData: "",
+      // 新增用户的dialog默认为false
+      addDialogVisible: false,
+      // 编辑用户dialog 默认为false
+      editDialogVisible: false,
+      // 添加用户规则
+      addUserFormRule: {
+        account: [{ required: true, message: "请输入邮箱", trigger: "blur" }],
+        nickname: [
+          { required: true, message: "请输入用户名", trigger: "blur" }
+        ],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+      },
+      // 添加用户表单
+      addUserForm: {
+        account: "",
+        nickname: "",
+        password: ""
+      },
+      editUserFormRule: {
+        email: [{ required: true, message: "请输入邮箱", trigger: "blur" }],
+        nickname: [{ required: true, message: "请输入用户名", trigger: "blur" }]
+      },
+      editUserForm: {}
     };
   },
   // 请求
@@ -99,9 +179,75 @@ export default {
       this.queryInfo.page = newPage;
       this.getUsersList();
     },
+    // 搜索功能，如果没有搜索data ,就跳出
+    search() {
+      if (this.searchData === "" || this.searchData === null) return;
+      // 搜索
+      const list = this.userList.filter(item => {
+        return item.nickname.match(this.searchData);
+      });
+      this.userList = list;
+      this.total = list.length;
+    },
+    // 关闭dialog后，重置dialog
+    closeDialog() {
+      this.$refs.addUserFormRef.resetFields();
+    },
+    closeEditDialog() {
+      this.$refs.editUserFormRef.resetFields();
+    },
+    // 添加用户
+    addUser() {
+      this.$refs.addUserFormRef.validate(async valid => {
+        if (!valid) return;
+        await this.$http
+          .post("register", this.addUserForm)
+          .then(res => {
+            this.$message.success("添加用户成功");
+            this.addDialogVisible = false;
+            this.$refs.addUserFormRef.resetFields();
+          })
+          .catch(error => {
+            this.$message.error("添加用户失败");
+            this.$refs.addUserFormRef.resetFields();
+          });
+      });
+    },
+    // 处理dialog 显示对应的内容
+    async showEditUserDialog(id) {
+      this.editDialogVisible = true;
+      await this.$http
+        .get(`user/${id}`)
+        .then(res => {
+          this.editUserForm = res.data;
+        })
+        .catch(error => {
+          this.$message.error("获取用户信息失败");
+        });
+    },
+    // 修改用户
+    editUser() {
+      this.$refs.editUserFormRef.validate(async valid => {
+        if (!valid) return;
+        await this.$http
+          .put("user/" + this.editUserForm.id, {
+            account: this.editUserForm.email,
+            nickname: this.editUserForm.nickname
+          })
+          .then(res => {
+            this.editDialogVisible = false;
+            this.getUsersList();
+            this.$message.success("修改状态成功");
+          })
+          .catch(error => {
+            this.editDialogVisible = false;
+            this.getUsersList();
+            this.$message.error("修改状态失败");
+          });
+      });
+    },
     // 修改用户状态，此方法暂时禁用，因为后端判断的时候delete用户无法登陆，token失效
     async userStatusChange(userinfo) {
-      console.log(userinfo);
       await this.$http
         .delete(`user/${userinfo.id}`)
         .then(res => {
@@ -109,6 +255,33 @@ export default {
         })
         .catch(error => {
           this.$message.error("修改状态失败");
+        });
+    },
+    deleteUser(id) {
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async valid => {
+          await this.$http
+            .delete(`user/${id}`)
+            .then(res => {
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+              this.getUsersList()
+            })
+            .catch(error => {
+              this.$message.error("删除失败");
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
         });
     }
   }

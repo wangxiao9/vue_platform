@@ -97,7 +97,6 @@ export default {
   methods: {
     // 登录重置
     resetForm() {
-      console.log(this);
       this.$refs.loginFormRef.resetFields()
     },
     // 登录

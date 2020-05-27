@@ -21,7 +21,8 @@ import {
      TableColumn,
      Switch,
      Tooltip,
-     Pagination
+     Pagination,
+     Dialog
 
 }
 from 'element-ui'
@@ -49,7 +50,7 @@ Vue.use(TableColumn)
 Vue.use(Switch)
 Vue.use(Tooltip)
 Vue.use(Pagination)
-
+Vue.use(Dialog)
 // 挂载弹框属性到全局变量中
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
