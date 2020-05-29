@@ -36,7 +36,12 @@
             ></el-switch>
           </template>
         </el-table-column>
-        <el-table-column prop="auth" label="角色"></el-table-column>
+        <el-table-column prop="auth" label="角色">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.auth===1">管理员</el-tag>
+            <el-tag v-else type="info">普通用户</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
           <!--操作button-->
           <template slot-scope="scope">
@@ -271,7 +276,7 @@ export default {
                 type: "success",
                 message: "删除成功!"
               });
-              this.getUsersList()
+              this.getUsersList();
             })
             .catch(error => {
               this.$message.error("删除失败");

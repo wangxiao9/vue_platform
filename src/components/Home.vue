@@ -21,6 +21,48 @@
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
+          <!--HOST管理-->
+          <el-submenu index="2">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span>HOST管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/project/sort">
+                <template slot="title">
+                  <i class="el-icon-menu"></i>
+                  <span>项目类型</span>
+                </template>
+              </el-menu-item>
+              <el-menu-item index="/project/list">
+                <template slot="title">
+                  <i class="el-icon-menu"></i>
+                  <span>项目列表</span>
+                </template>
+              </el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <!--项目管理-->
+          <el-submenu index="3">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span>项目管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/project/sort">
+                <template slot="title">
+                  <i class="el-icon-menu"></i>
+                  <span>项目类型</span>
+                </template>
+              </el-menu-item>
+              <el-menu-item index="/project/list">
+                <template slot="title">
+                  <i class="el-icon-menu"></i>
+                  <span>项目列表</span>
+                </template>
+              </el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
         </el-menu>
       </el-aside>
       <el-main>
