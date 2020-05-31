@@ -28,16 +28,10 @@
               <span>HOST管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/project/sort">
+              <el-menu-item index="/host">
                 <template slot="title">
                   <i class="el-icon-menu"></i>
-                  <span>项目类型</span>
-                </template>
-              </el-menu-item>
-              <el-menu-item index="/project/list">
-                <template slot="title">
-                  <i class="el-icon-menu"></i>
-                  <span>项目列表</span>
+                  <span>HOST配置</span>
                 </template>
               </el-menu-item>
             </el-menu-item-group>
@@ -76,12 +70,12 @@
 export default {
   methods: {
     // 退出登录
-    logout() {
-      window.sessionStorage.clear();
-      this.$router.push("/login");
+    logout () {
+      window.sessionStorage.clear()
+      this.$router.push('/login')
     }
   }
-};
+}
 </script>
 <style lang="less" scoped>
 .el-container {

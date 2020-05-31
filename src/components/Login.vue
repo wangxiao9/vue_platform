@@ -72,27 +72,27 @@ export default {
   data() {
     return {
       loginForm: {
-        account: "wangxiao@qq.com",
-        password: "123456"
+        account: 'wangxiao@qq.com',
+        password: '123456'
       },
       loginFormRule: {
-        account: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+        account: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
       },
       show: true,
       registerForm: {
-        account: "",
-        nickname: "",
-        password: ""
+        account: '',
+        nickname: '',
+        password: ''
       },
       registerFormRule: {
-        account: [{ required: true, message: "请输入邮箱", trigger: "blur" }],
+        account: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
         nickname: [
-          { required: true, message: "请输入用户名", trigger: "blur" }
+          { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
       }
-    };
+    }
   },
   methods: {
     // 登录重置
@@ -107,22 +107,21 @@ export default {
        * 3. 登录失败，提示登录失败，并且清空输入框
        */
       this.$refs.loginFormRef.validate(async valid => {
-        if (!valid) return;
+        if (!valid) return
         await this.$http
-          .post("token", this.loginForm)
+          .post('token', this.loginForm)
           .then(res => {
-            console.log(res.data);
-            this.$message.success("登录成功")
+            this.$message.success('登录成功')
             // 1. 将token存入sessionStorage
             window.sessionStorage.setItem('token', res.data.token)
             // 跳转到home页面
             this.$router.push('/home')
           })
           .catch(error => {
-            if (error.response.status == 401) {
-              console.log("登录失败")
+            if (error.response.status === 401) {
+              console.log('登录失败')
             } else {
-              this.$message.error("登录失败")
+              this.$message.error('登录失败')
               this.$refs.loginFormRef.resetFields()
             }
           })
@@ -130,7 +129,7 @@ export default {
     },
     // 注册重置
     resetRegisterForm() {
-      this.$refs.registerFormRef.resetFields();
+      this.$refs.registerFormRef.resetFields()
     },
     // 注册用户
     register() {
@@ -142,20 +141,21 @@ export default {
       this.$refs.registerFormRef.validate(async valid => {
         if (!valid) return
         await this.$http
-          .post("register", this.registerForm)
+          .post('register', this.registerForm)
           .then(res => {
-            this.$message.success("注册成功")
+            this.$message.success('注册成功')
             this.$refs.registerFormRef.resetFields()
             this._data.show = true
           })
-          .catch(error => {
-            this.$message.error("注册失败")
+          .catch(err => {
+            this.$message.error('注册失败')
             this.$refs.registerFormRef.resetFields()
+            console.log(err)
           })
       })
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>

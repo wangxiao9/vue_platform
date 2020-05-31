@@ -121,10 +121,9 @@
 </template>
 
 <script>
-import { strictEqual } from "assert";
-import { userInfo } from "os";
+
 export default {
-  data() {
+  data () {
     return {
       // 获取用户列表参数对象
       queryInfo: {
@@ -137,160 +136,160 @@ export default {
       userList: [],
       // 总共多少条用户
       total: 0,
-      searchData: "",
+      searchData: '',
       // 新增用户的dialog默认为false
       addDialogVisible: false,
       // 编辑用户dialog 默认为false
       editDialogVisible: false,
       // 添加用户规则
       addUserFormRule: {
-        account: [{ required: true, message: "请输入邮箱", trigger: "blur" }],
+        account: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
         nickname: [
-          { required: true, message: "请输入用户名", trigger: "blur" }
+          { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
       },
       // 添加用户表单
       addUserForm: {
-        account: "",
-        nickname: "",
-        password: ""
+        account: '',
+        nickname: '',
+        password: ''
       },
       editUserFormRule: {
-        email: [{ required: true, message: "请输入邮箱", trigger: "blur" }],
-        nickname: [{ required: true, message: "请输入用户名", trigger: "blur" }]
+        email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
+        nickname: [{ required: true, message: '请输入用户名', trigger: 'blur' }]
       },
       editUserForm: {}
-    };
+    }
   },
   // 请求
-  created() {
-    this.getUsersList();
+  created () {
+    this.getUsersList()
   },
   methods: {
-    async getUsersList() {
+    async getUsersList () {
       // 通过users 获取 用户列表
-      const { data: res } = await this.$http.post("users", this.queryInfo);
-      this.userList = res.users;
-      this.total = res._meta.total;
+      const { data: res } = await this.$http.post('users', this.queryInfo)
+      this.userList = res.users
+      this.total = res._meta.total
     },
     // 监听每页个数事件
-    handleSizeChange(newSize) {
-      this.queryInfo.per_page = newSize;
-      this.getUsersList();
+    handleSizeChange (newSize) {
+      this.queryInfo.per_page = newSize
+      this.getUsersList()
     },
     // 监听当前页
-    handleCurrentChange(newPage) {
-      this.queryInfo.page = newPage;
-      this.getUsersList();
+    handleCurrentChange (newPage) {
+      this.queryInfo.page = newPage
+      this.getUsersList()
     },
     // 搜索功能，如果没有搜索data ,就跳出
-    search() {
-      if (this.searchData === "" || this.searchData === null) return;
+    search () {
+      if (this.searchData === '' || this.searchData === null) return
       // 搜索
       const list = this.userList.filter(item => {
-        return item.nickname.match(this.searchData);
-      });
-      this.userList = list;
-      this.total = list.length;
+        return item.nickname.match(this.searchData)
+      })
+      this.userList = list
+      this.total = list.length
     },
     // 关闭dialog后，重置dialog
-    closeDialog() {
-      this.$refs.addUserFormRef.resetFields();
+    closeDialog () {
+      this.$refs.addUserFormRef.resetFields()
     },
-    closeEditDialog() {
-      this.$refs.editUserFormRef.resetFields();
+    closeEditDialog () {
+      this.$refs.editUserFormRef.resetFields()
     },
     // 添加用户
-    addUser() {
+    addUser () {
       this.$refs.addUserFormRef.validate(async valid => {
-        if (!valid) return;
+        if (!valid) return
         await this.$http
-          .post("register", this.addUserForm)
+          .post('register', this.addUserForm)
           .then(res => {
-            this.$message.success("添加用户成功");
-            this.addDialogVisible = false;
-            this.$refs.addUserFormRef.resetFields();
+            this.$message.success('添加用户成功')
+            this.addDialogVisible = false
+            this.$refs.addUserFormRef.resetFields()
           })
           .catch(error => {
-            this.$message.error("添加用户失败");
-            this.$refs.addUserFormRef.resetFields();
-          });
-      });
+            this.$message.error('添加用户失败')
+            this.$refs.addUserFormRef.resetFields()
+          })
+      })
     },
     // 处理dialog 显示对应的内容
-    async showEditUserDialog(id) {
-      this.editDialogVisible = true;
+    async showEditUserDialog (id) {
+      this.editDialogVisible = true
       await this.$http
         .get(`user/${id}`)
         .then(res => {
-          this.editUserForm = res.data;
+          this.editUserForm = res.data
         })
         .catch(error => {
-          this.$message.error("获取用户信息失败");
-        });
+          this.$message.error('获取用户信息失败')
+        })
     },
     // 修改用户
-    editUser() {
+    editUser () {
       this.$refs.editUserFormRef.validate(async valid => {
-        if (!valid) return;
+        if (!valid) return
         await this.$http
-          .put("user/" + this.editUserForm.id, {
+          .put('user/' + this.editUserForm.id, {
             account: this.editUserForm.email,
             nickname: this.editUserForm.nickname
           })
           .then(res => {
-            this.editDialogVisible = false;
-            this.getUsersList();
-            this.$message.success("修改状态成功");
+            this.editDialogVisible = false
+            this.getUsersList()
+            this.$message.success('修改状态成功')
           })
           .catch(error => {
-            this.editDialogVisible = false;
-            this.getUsersList();
-            this.$message.error("修改状态失败");
-          });
-      });
+            this.editDialogVisible = false
+            this.getUsersList()
+            this.$message.error('修改状态失败')
+          })
+      })
     },
     // 修改用户状态，此方法暂时禁用，因为后端判断的时候delete用户无法登陆，token失效
-    async userStatusChange(userinfo) {
+    async userStatusChange (userinfo) {
       await this.$http
         .delete(`user/${userinfo.id}`)
         .then(res => {
-          this.$message.success("修改状态成功");
+          this.$message.success('修改状态成功')
         })
         .catch(error => {
-          this.$message.error("修改状态失败");
-        });
+          this.$message.error('修改状态失败')
+        })
     },
-    deleteUser(id) {
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+    deleteUser (id) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(async valid => {
           await this.$http
             .delete(`user/${id}`)
             .then(res => {
               this.$message({
-                type: "success",
-                message: "删除成功!"
-              });
-              this.getUsersList();
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.getUsersList()
             })
             .catch(error => {
-              this.$message.error("删除失败");
-            });
+              this.$message.error('删除失败')
+            })
         })
         .catch(() => {
           this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>
