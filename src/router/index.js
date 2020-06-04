@@ -4,6 +4,10 @@ import Login from '../components/Login.vue'
 import Home from '../components/Home.vue'
 import User from '../components/user/User.vue'
 import Host from '../components/host/Host.vue'
+import Sort from '../components/project/Sort.vue'
+import Project from '../components/project/Project.vue'
+import Api from '../components/api/Api.vue'
+import Setting from '../components/api/Setting.vue'
 
 Vue.use(VueRouter)
 
@@ -24,7 +28,11 @@ const routes = [
     component: Home,
     children: [
       { path: '/user', component: User },
-      { path: '/host', component: Host }
+      { path: '/host', component: Host },
+      { path: '/project/sort', component: Sort },
+      { path: '/project/list', component: Project },
+      { path: '/api/list', component: Api },
+      { path: '/api/setting', component: Setting }
     ]
   }
 ]

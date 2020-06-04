@@ -22,7 +22,12 @@ import {
   Tooltip,
   Pagination,
   Dialog,
-  Tag
+  Tag,
+  Select,
+  Option,
+  Alert,
+  Tabs,
+  TabPane
 
 } from 'element-ui'
 
@@ -51,6 +56,12 @@ Vue.use(Tooltip)
 Vue.use(Pagination)
 Vue.use(Dialog)
 Vue.use(Tag)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(Alert)
+Vue.use(Tabs)
+Vue.use(TabPane)
+
 // 挂载弹框属性到全局变量中
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

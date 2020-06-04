@@ -22,3 +22,7 @@ body,
 .el-pagination{
      margin-top: 10px;
 }
+
+.el-alert {
+     margin: 10px 0px;
+}

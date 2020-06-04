@@ -57,6 +57,26 @@
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
+          <el-submenu index="4">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span>API管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/api/setting">
+                <template slot="title">
+                  <i class="el-icon-menu"></i>
+                  <span>API配置</span>
+                </template>
+              </el-menu-item>
+              <el-menu-item index="/api/list">
+                <template slot="title">
+                  <i class="el-icon-menu"></i>
+                  <span>API列表</span>
+                </template>
+              </el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
         </el-menu>
       </el-aside>
       <el-main>

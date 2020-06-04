@@ -130,7 +130,7 @@ export default {
         // 当前页数
         page: 1,
         // 每页显示多少条
-        per_page: 5
+        per_page: 10
       },
       // 用户列表
       userList: [],
@@ -214,6 +214,7 @@ export default {
           .catch(error => {
             this.$message.error('添加用户失败')
             this.$refs.addUserFormRef.resetFields()
+            console.log(error)
           })
       })
     },
@@ -227,6 +228,7 @@ export default {
         })
         .catch(error => {
           this.$message.error('获取用户信息失败')
+          console.log(error)
         })
     },
     // 修改用户
@@ -247,6 +249,7 @@ export default {
             this.editDialogVisible = false
             this.getUsersList()
             this.$message.error('修改状态失败')
+            console.log(error)
           })
       })
     },
@@ -259,6 +262,7 @@ export default {
         })
         .catch(error => {
           this.$message.error('修改状态失败')
+          console.log(error)
         })
     },
     deleteUser (id) {
@@ -279,6 +283,7 @@ export default {
             })
             .catch(error => {
               this.$message.error('删除失败')
+              console.log(error)
             })
         })
         .catch(() => {

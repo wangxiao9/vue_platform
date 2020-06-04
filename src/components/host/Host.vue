@@ -3,16 +3,16 @@
     <!--面包屑-->
     <el-breadcrumb>
       <el-breadcrumb-item>首页</el-breadcrumb-item>
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+      <el-breadcrumb-item>HOST管理</el-breadcrumb-item>
+      <el-breadcrumb-item>HOST列表</el-breadcrumb-item>
     </el-breadcrumb>
     <!--卡片-->
     <el-card class="box-card">
       <!--搜索，添加用户-->
       <el-row :gutter="15">
         <el-col :span="8">
-          <el-input placeholder="请输入内容">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input placeholder="请输入内容" v-model="searchData" clearable @clear="getHostList">
+            <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
@@ -134,6 +134,7 @@ export default {
       // 存储host列表
       hostList: [],
       total: 0,
+      searchData: '',
       addDialogVisible: false,
       editDialogVisible: false,
       addHostForm: {
@@ -289,6 +290,14 @@ export default {
             message: '已取消修改'
           })
         })
+    },
+    search() {
+      if (this.searchData === '' || this.searchData === null) return
+      const list = this.hostList.filter(item => {
+        return item.name.match(this.searchData)
+      })
+      this.hostList = list
+      this.total = list.length
     }
   }
 }
