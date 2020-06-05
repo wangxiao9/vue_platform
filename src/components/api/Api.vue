@@ -7,11 +7,8 @@
       <el-breadcrumb-item>API列表</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card>
-      <el-tabs :tab-position="tabPosition" style="height: 200px;">
-        <el-tab-pane label="用户管理">用户管理</el-tab-pane>
-        <el-tab-pane label="配置管理">配置管理</el-tab-pane>
-        <el-tab-pane label="角色管理">角色管理</el-tab-pane>
-        <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
+      <el-tabs v-model="editableTabsValue" type="card">
+        <el-tab-pane v-for="item in projectList" :key="item.id" :label="item.name">{{item.name}}</el-tab-pane>
       </el-tabs>
     </el-card>
   </div>
@@ -21,7 +18,24 @@
 export default {
   data() {
     return {
-      tabPosition: 'left'
+      queryInfo: {
+        // 当前页数
+        page: 1,
+        // 每页显示多少条
+        per_page: 10
+      },
+      projectList: [],
+      editableTabsValue: ''
+    }
+  },
+  created() {
+    this.getProjectList()
+  },
+  methods: {
+    async getProjectList() {
+      const { data: res } = await this.$http.post('projects', this.queryInfo)
+      this.projectList = res.projects
+      this.editableTabsValue = res.projects[0].name
     }
   }
 }

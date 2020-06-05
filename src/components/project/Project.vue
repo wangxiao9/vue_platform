@@ -177,7 +177,6 @@ export default {
       const { data: res } = await this.$http.post('projects', this.queryInfo)
       this.projectList = res.projects
       this.total = res._meta.total
-      console.log(res)
     },
     async getTypeList() {
       const { data: res } = await this.$http.post('types', this.queryInfo)
