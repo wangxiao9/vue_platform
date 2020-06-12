@@ -8,6 +8,7 @@ import Sort from '../components/project/Sort.vue'
 import Project from '../components/project/Project.vue'
 import Api from '../components/api/Api.vue'
 import Setting from '../components/api/Setting.vue'
+import Smoke from '../components/api/Smoke.vue'
 
 Vue.use(VueRouter)
 
@@ -32,7 +33,8 @@ const routes = [
       { path: '/project/sort', component: Sort },
       { path: '/project/list', component: Project },
       { path: '/api/list', component: Api },
-      { path: '/api/setting', component: Setting }
+      { path: '/api/setting', component: Setting },
+      { path: '/api/smoke', component: Smoke }
     ]
   }
 ]

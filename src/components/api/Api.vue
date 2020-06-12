@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 export default {
   data() {
     return {
@@ -24,19 +25,17 @@ export default {
         // 每页显示多少条
         per_page: 10
       },
-      projectList: [],
       editableTabsValue: ''
     }
   },
   created() {
-    this.getProjectList()
+    this.getProjectList(this.queryInfo)
+  },
+  computed: {
+    ...mapState(['projectList'])
   },
   methods: {
-    async getProjectList() {
-      const { data: res } = await this.$http.post('projects', this.queryInfo)
-      this.projectList = res.projects
-      this.editableTabsValue = res.projects[0].name
-    }
+    ...mapActions(['getProjectList'])
   }
 }
 </script>

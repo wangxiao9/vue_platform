@@ -199,7 +199,7 @@ export default {
       this.getTypeList()
     },
     closeDialog() {
-      this.$ref.addTypeFormRef.resetFields()
+      this.$refs.addTypeFormRef.resetFields()
     }
   }
 }

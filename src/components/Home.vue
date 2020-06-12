@@ -66,13 +66,19 @@
               <el-menu-item index="/api/setting">
                 <template slot="title">
                   <i class="el-icon-menu"></i>
-                  <span>API配置</span>
+                  <span>API全局配置</span>
+                </template>
+              </el-menu-item>
+              <el-menu-item index="/api/smoke">
+                <template slot="title">
+                  <i class="el-icon-menu"></i>
+                  <span>API冒烟测试</span>
                 </template>
               </el-menu-item>
               <el-menu-item index="/api/list">
                 <template slot="title">
                   <i class="el-icon-menu"></i>
-                  <span>API列表</span>
+                  <span>API单元测试</span>
                 </template>
               </el-menu-item>
             </el-menu-item-group>
