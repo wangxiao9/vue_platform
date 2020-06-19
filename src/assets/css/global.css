@@ -26,3 +26,11 @@ body,
 .el-alert {
      margin: 10px 0px;
 }
+
+.el-drawer {
+     outline: none;
+}
+
+.el-drawer__header span {
+     outline: none;
+}

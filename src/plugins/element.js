@@ -27,7 +27,8 @@ import {
   Option,
   Alert,
   Tabs,
-  TabPane
+  TabPane,
+  Drawer
 
 } from 'element-ui'
 
@@ -61,6 +62,7 @@ Vue.use(Option)
 Vue.use(Alert)
 Vue.use(Tabs)
 Vue.use(TabPane)
+Vue.use(Drawer)
 
 // 挂载弹框属性到全局变量中
 Vue.prototype.$message = Message
