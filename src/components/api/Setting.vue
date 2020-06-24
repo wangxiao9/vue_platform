@@ -78,7 +78,7 @@
       </div>
     </el-drawer>
     <!--打开详情页面-->
-    <el-drawer :title="configDetailTitle" :visible.sync="drawer" :before-close="editHandleClose">
+    <el-drawer :title="configDetailTitle" :visible.sync="editDrawer" :before-close="editHandleClose">
       <div class="drawer_body">
         <el-form :model="editConfigForm" ref="editConfigFormRef">
           <el-form-item>
@@ -127,7 +127,7 @@ export default {
       },
       configList: [],
       total: 0,
-      drawer: false,
+      editDrawer: false,
       adddrawer: false,
       saveConfigForm: {
         methods: '',
@@ -145,7 +145,6 @@ export default {
   methods: {
     async getConfigList() {
       const { data: res } = await this.$http.post('configs', this.queryInfo)
-      console.log(res)
       this.configList = res.api_config
       this.total = res._meta.total
     },
@@ -160,14 +159,13 @@ export default {
     editHandleClose() {
       this.$confirm('确认关闭？')
         .then(_ => {
-          console.log(this)
           this.$refs.editConfigFormRef.resetFields()
-          this.drawer = false
+          this.editDrawer = false
         })
         .catch(_ => {})
     },
     openConfigDetail(id, name) {
-      this.drawer = true
+      this.editDrawer = true
       this.configDetailTitle = name
       console.log(this)
       this.getConfigDetail(id)
