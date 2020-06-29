@@ -17,6 +17,7 @@ body,
 
 .el-table{
      margin-top: 10px;
+     font-size: 12px;
 }
 
 .el-pagination{
@@ -33,4 +34,8 @@ body,
 
 .el-drawer__header span {
      outline: none;
+}
+
+.el-tabs {
+     margin-top: 10px;
 }

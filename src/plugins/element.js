@@ -28,7 +28,8 @@ import {
   Alert,
   Tabs,
   TabPane,
-  Drawer
+  Drawer,
+  Divider
 
 } from 'element-ui'
 
@@ -63,7 +64,7 @@ Vue.use(Alert)
 Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Drawer)
-
+Vue.use(Divider)
 // 挂载弹框属性到全局变量中
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
