@@ -20,7 +20,15 @@
         </el-col>
       </el-row>
       <!--主体-->
-      <el-table :data="hostList" border stripe>
+      <el-table
+        :data="hostList"
+        border
+        stripe
+        v-loading="loading"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+      >
         <el-table-column type="index" label="#"></el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="host" label="内容">
@@ -152,7 +160,8 @@ export default {
         name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
         host: [{ required: true, message: '请输入host内容', trigger: 'blur' }],
         description: [{ message: '请输入描述', trigger: 'blur' }]
-      }
+      },
+      loading: false
     }
   },
   // 自定义过滤器
@@ -167,6 +176,7 @@ export default {
   },
   created() {
     this.getHostList()
+    this.loading = true
   },
   methods: {
     async getHostList() {

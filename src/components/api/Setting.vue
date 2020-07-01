@@ -20,14 +20,7 @@
       <!--主体-->
       <el-container>
         <el-aside style="width:500px">
-          <el-table
-            :data="configList"
-            stripe
-            @row-click="openConfigDetail"
-            v-loading="loading"
-            element-loading-spinner="el-icon-loading"
-            element-loading-background="rgba(0, 0, 0, 0.8)"
-          >
+          <el-table :data="configList" stripe @row-click="openConfigDetail">
             <el-table-column prop="name" label="名称"></el-table-column>
             <el-table-column prop="description" label="描述"></el-table-column>
             <el-table-column prop="ConfigStatus" label="状态">
@@ -40,7 +33,7 @@
         </el-aside>
         <el-main style="background:#fbfdfe">
           <el-row>
-            <span>{{editConfigForm.name}}</span>
+            <span style="font-weight:bold">{{editConfigForm.name}}</span>
           </el-row>
           <el-row>
             <el-col :span="10">
@@ -124,11 +117,50 @@
         </div>
       </div>
     </el-drawer>
+    <!--打开详情页面-->
+    <el-drawer :visible.sync="editDrawer">
+      <div class="drawer_body">
+        <el-form :model="editConfigForm" ref="editConfigFormRef">
+          <el-form-item prop="name" label="| 配置名称">
+            <el-input v-model="editConfigForm.name"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-form-item label="| 请求方式"></el-form-item>
+            <el-select v-model="editConfigForm.methods" style="width:100%">
+              <el-option label="GET" value="GET"></el-option>
+              <el-option label="POST" value="POST"></el-option>
+              <el-option label="DELETE" value="DELETE"></el-option>
+              <el-option label="PUT" value="PUT"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="url" label="| 请求地址">
+            <el-input v-model="editConfigForm.url"></el-input>
+          </el-form-item>
+          <el-form-item prop="header" label="| 请求headers">
+            <el-input v-model="editConfigForm.header"></el-input>
+          </el-form-item>
+          <el-form-item prop="param" label="| 请求参数">
+            <el-input
+              v-model="editConfigForm.param"
+              type="textarea"
+              :rows="5"
+              placeholder="输入请求参数json格式"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="description" label="| 描述">
+            <el-input v-model="editConfigForm.description"></el-input>
+          </el-form-item>
+        </el-form>
+        <div class="drawer__footer">
+          <el-button @click="editDrawer=false">取消</el-button>
+          <el-button>保存</el-button>
+        </div>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
 <script>
-import { Loading } from 'element-ui'
 export default {
   data() {
     return {
@@ -160,8 +192,7 @@ export default {
         param: [{ required: true, message: '请输入参数', trigger: 'blur' }],
         description: [{ message: '请输入描述', trigger: 'blur' }]
       },
-      editConfigForm: {},
-      loading: true
+      editConfigForm: {}
     }
   },
   created() {
@@ -211,10 +242,19 @@ export default {
           this.$message.error('发布失败')
           console.log(error)
         })
-      this.loading = true
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      setTimeout(() => {
+        loading.close()
+      }, 2000)
     },
     edit() {
       console.log(this.editConfigForm)
+      this.editDrawer = true
     }
   }
 }
