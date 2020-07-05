@@ -29,7 +29,8 @@ import {
   Tabs,
   TabPane,
   Drawer,
-  Divider
+  Divider,
+  PageHeader
 
 } from 'element-ui'
 
@@ -65,6 +66,7 @@ Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Drawer)
 Vue.use(Divider)
+Vue.use(PageHeader)
 // 挂载弹框属性到全局变量中
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
