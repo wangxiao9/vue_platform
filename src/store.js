@@ -13,7 +13,14 @@ export default new Vuex.Store({
     projectList: [],
     project_total: 0,
     typeList: [],
-    type_total: 0
+    type_total: 0,
+    configList: [],
+    config_total: 0,
+    query: {
+      page: 1,
+      // 每页显示多少条
+      per_page: 100
+    }
   },
   mutations: {
     initProjectList(state, res) {
@@ -23,6 +30,10 @@ export default new Vuex.Store({
     initTypeList(state, res) {
       state.typeList = res.typeList
       state.type_total = res._meta.total
+    },
+    initConfigList(state, res) {
+      state.configList = res.api_config
+      state.config_total = res._meta.total
     }
   },
   actions: {
@@ -31,18 +42,26 @@ export default new Vuex.Store({
      * @param {*} context mutations
      * @param {*} query   参数
      */
-    async getProjectList(context, query) {
-      await axios.post('projects', query).then(res => {
+    async getProjectList(context) {
+      await axios.post('projects', this.state.query).then(res => {
         context.commit('initProjectList', res.data)
       }).catch(error => {
         console.log(error)
       })
     },
 
-    async getTypeList(context, query) {
-      await axios.$http.post('types', query).then(res => {
-        console.log(res.data)
+    async getTypeList(context) {
+      await axios.post('types', this.state.query).then(res => {
         context.commit('initTypeList', res.data)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    // 获取全局配置
+    async getConfigList(context) {
+      await axios.post('configs', this.state.query).then(res => {
+        console.log(res.data)
+        context.commit('initConfigList', res.data)
       }).catch(error => {
         console.log(error)
       })

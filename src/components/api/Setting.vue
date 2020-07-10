@@ -26,7 +26,7 @@
             <el-table-column prop="ConfigStatus" label="状态">
               <template slot-scope="scope">
                 <el-tag v-if="scope.row.ConfigStatus== false" type="danger">未发布</el-tag>
-                <el-tag v-else type="success">已发布</el-tag>
+                <el-tag v-else type="success">发布</el-tag>
               </template>
             </el-table-column>
           </el-table>
@@ -70,12 +70,8 @@
           <el-divider></el-divider>
           <el-row>
             <el-col>
-              <el-button v-if="this.editConfigForm.ConfigStatus==true">取消发布</el-button>
-              <div v-else>
-                <el-button @click="release">release</el-button>
-                <el-button type="primary" @click="editDrawer = true">edit</el-button>
-                <el-button type="danger" @click="deleteConfig">del</el-button>
-              </div>
+              <el-button @click="release">发布</el-button>
+              <el-button type="primary" @click="edit">编辑</el-button>
             </el-col>
           </el-row>
         </el-main>
@@ -124,7 +120,7 @@
     <!--打开详情页面-->
     <el-drawer :visible.sync="editDrawer">
       <div class="drawer_body">
-        <el-form :model="editConfigForm" ref="editConfigFormRef" :rules="editConfigFormRule">
+        <el-form :model="editConfigForm" ref="editConfigFormRef">
           <el-form-item prop="name" label="| 配置名称">
             <el-input v-model="editConfigForm.name"></el-input>
           </el-form-item>
@@ -157,7 +153,7 @@
         </el-form>
         <div class="drawer__footer">
           <el-button @click="editDrawer=false">取消</el-button>
-          <el-button @click="editSaveConfig">保存</el-button>
+          <el-button>保存</el-button>
         </div>
       </div>
     </el-drawer>
@@ -187,16 +183,6 @@ export default {
         description: ''
       },
       saveConfigFormRule: {
-        name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
-        methods: [
-          { required: true, message: '请选择请求方式', trigger: 'blur' }
-        ],
-        url: [{ required: true, message: '请输入url', trigger: 'blur' }],
-        header: [{ message: '请输入header', trigger: 'blur' }],
-        param: [{ required: true, message: '请输入参数', trigger: 'blur' }],
-        description: [{ message: '请输入描述', trigger: 'blur' }]
-      },
-      editConfigFormRule: {
         name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
         methods: [
           { required: true, message: '请选择请求方式', trigger: 'blur' }
@@ -240,31 +226,6 @@ export default {
           })
       })
     },
-    editSaveConfig() {
-      this.$refs.editConfigFormRef.validate(async valid => {
-        if (!valid) return
-        await this.$http
-          .put('config/' + this.editConfigForm.id, {
-            name: this.editConfigForm.name,
-            methods: this.editConfigForm.methods,
-            url: this.editConfigForm.url,
-            header: this.editConfigForm.header,
-            param: this.editConfigForm.param,
-            description: this.editConfigForm.description
-          })
-          .then(res => {
-            this.$message.success('修改配置成功')
-            this.editDrawer = false
-            this.$refs.editConfigFormRef.resetFields()
-            this.getConfigList()
-          })
-          .catch(error => {
-            this.$message.error('添加配置失败')
-            this.$refs.saveConfigFormRef.resetFields()
-            console.log(error)
-          })
-      })
-    },
     async release() {
       await this.$http
         .post('config/run/' + this.editConfigForm.id, {
@@ -282,34 +243,19 @@ export default {
           this.$message.error('发布失败')
           console.log(error)
         })
-    },
-    deleteConfig() {
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
       })
-        .then(async valid => {
-          await this.$http
-            .delete('config/' + this.editConfigForm.id)
-            .then(res => {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
-              this.getConfigList()
-            })
-            .catch(error => {
-              this.$message.error('删除失败')
-              console.log(error)
-            })
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
+      setTimeout(() => {
+        loading.close()
+      }, 2000)
+    },
+    edit() {
+      console.log(this.editConfigForm)
+      this.editDrawer = true
     }
   }
 }

@@ -29,7 +29,7 @@ export default {
     }
   },
   created() {
-    this.getProjectList(this.queryInfo)
+    this.getProjectList()
   },
   computed: {
     ...mapState(['projectList'])
