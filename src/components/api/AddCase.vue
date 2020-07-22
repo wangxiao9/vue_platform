@@ -63,7 +63,7 @@
                 <!-- <el-input v-model="addCaseForm.dependent"></el-input> -->
                 <el-radio-group v-model="addCaseForm.dependent">
                   <el-radio :label="false">无依赖</el-radio>
-                  <el-radio :label="true">有依赖</el-radio>
+                  <el-radio :label="true" disabled>有依赖</el-radio>
                   <el-button
                     v-if="addCaseForm.dependent==true"
                     class="el-icon-circle-plus-outline"

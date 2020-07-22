@@ -10,6 +10,7 @@ import Api from '../components/api/Api.vue'
 import Setting from '../components/api/Setting.vue'
 import Smoke from '../components/api/Smoke.vue'
 import AddCase from '../components/api/AddCase.vue'
+import EditCase from '../components/api/EditCase.vue'
 
 Vue.use(VueRouter)
 
@@ -36,7 +37,8 @@ const routes = [
       { path: '/api/list', component: Api },
       { path: '/api/setting', component: Setting },
       { path: '/api/smoke', component: Smoke },
-      { path: '/api/add/case', component: AddCase }
+      { path: '/api/add/case', component: AddCase },
+      { path: '/api/edit/case', component: EditCase }
     ]
   }
 ]

@@ -34,10 +34,9 @@
           :key="item.id"
           :setId="item.id"
           :label="item.name"
-          @click="getSetId(item.id)"
         >
           <div>
-            <el-button type="primary" style="float:right">运行</el-button>
+            <el-button type="primary" style="float:right" @click="runcase(item.id)">运行</el-button>
             <el-table :data="smokeCaseList" border stripe>
               <el-table-column type="expand">
                 <template slot-scope="scope">
@@ -75,6 +74,22 @@
                 <template slot-scope="scope">
                   <i v-if="scope.row.api_res_status==false" class="el-icon-error"></i>
                   <i v-else class="el-icon-success"></i>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作">
+                <template slot-scope="scope">
+                  <el-button
+                    type="primary"
+                    icon="el-icon-edit"
+                    size="mini"
+                    @click="editCase(scope.row.id)"
+                  ></el-button>
+                  <el-button
+                    type="danger"
+                    icon="el-icon-delete"
+                    size="mini"
+                    @click="deleteCase(scope.row.id)"
+                  ></el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -162,7 +177,8 @@ export default {
       },
       set_id: null,
       totle: 0,
-      case_total: 0
+      case_total: 0,
+      fullscreen: false
     }
   },
   created() {
@@ -173,12 +189,6 @@ export default {
   },
   computed: {
     ...mapState(['projectList', 'configList'])
-    // ProjectList: function() {
-    //   // return this.projectList.filter(item => {
-    //   //   return item.type_id === 3
-    //   // })
-    //   return this.projectList
-    // }
   },
   methods: {
     ...mapActions(['getProjectList', 'getConfigList']),
@@ -213,6 +223,7 @@ export default {
      * 根据切换不同tab获取对应的测试集的cases
      */
     getTabId(tag) {
+      console.log(tag)
       this.getSmaokeCase(tag.$attrs.setId)
     },
     deleteCaseSet() {
@@ -252,9 +263,42 @@ export default {
       this.smokeCaseList = res.api_smoke_cases
       this.case_total = res._meta.total
     },
-    getSetId(id) {
-      this.set_id = id
-      console.log(this.set_id)
+    /**
+     * 编辑case,把caseid传出去
+     */
+    editCase(id) {
+      this.$router.push({ path: '/api/edit/case', query: { id: id } })
+    },
+    openfullScreen() {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      return loading
+    },
+    closefullScreen(loading) {
+      loading.close()
+    },
+    // 运行case
+    async runcase(id) {
+      this.openfullScreen()
+      await this.$http
+        .post(`cases/run/${id}`)
+        .then(res => {
+          console.log(res)
+          if (res.status === 200) {
+            this.getSmaokeCase(id)
+            this.closefullScreen(this.openfullScreen())
+          }
+          this.$message.success('运行冒烟测试用例成功')
+        })
+        .catch(error => {
+          this.closefullScreen(this.openfullScreen())
+          this.$message.error('添加测试集失败')
+          console.log(error)
+        })
     }
   }
 }
@@ -275,5 +319,8 @@ export default {
   margin-right: 0;
   margin-bottom: 0;
   width: 50%;
+}
+.el-icon-success {
+  color: #19e6a4;
 }
 </style>

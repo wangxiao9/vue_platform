@@ -32,8 +32,8 @@ import {
   Divider,
   PageHeader,
   Radio,
-  RadioGroup
-
+  RadioGroup,
+  Loading
 } from 'element-ui'
 
 Vue.use(Button)
@@ -71,6 +71,7 @@ Vue.use(Divider)
 Vue.use(PageHeader)
 Vue.use(Radio)
 Vue.use(RadioGroup)
+Vue.use(Loading)
 // 挂载弹框属性到全局变量中
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

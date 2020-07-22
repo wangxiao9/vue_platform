@@ -220,6 +220,7 @@ export default {
         })
     },
     editHost() {
+      console.log(this)
       this.$refs.editHostFormRef.validate(async valid => {
         if (!valid) return
         await this.$http
