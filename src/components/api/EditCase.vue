@@ -67,11 +67,20 @@
                   <el-button
                     v-if="editCaseForm.is_dependent==true"
                     class="el-icon-circle-plus-outline"
+                    @click="addDialogVisible = true"
                   >新增依赖值</el-button>
                 </el-radio-group>
               </el-col>
-              <el-col :span="10" v-if="editCaseForm.dependent==true">
-                <el-input :disabled="true" label="惺惺惜惺惺">ssssss</el-input>
+              <el-col :span="12" v-if="editCaseForm.is_dependent==true">
+                <el-table :data="dependentList" border>
+                  <el-table-column prop="case_no" label="依赖case"></el-table-column>
+                  <el-table-column prop="dependent_col" label="依赖key"></el-table-column>
+                  <el-table-column prop="dependent_response_data" label="依赖表达式"></el-table-column>
+                  <el-table-column label="操作">
+                    <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+                    <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+                  </el-table-column>
+                </el-table>
               </el-col>
             </el-form-item>
           </el-col>
@@ -108,6 +117,29 @@
         <el-button type="primary">保存</el-button>
       </div>
     </el-card>
+    <!--添加依赖布局-->
+    <el-dialog title="添加依赖" :visible.sync="addDialogVisible" width="40%">
+      <el-form
+        ref="addDependentFormRef"
+        :rules="addDependentFormRule"
+        :model="addDependentForm"
+        label-width="100px"
+      >
+        <el-form-item prop="dependent_case_no" label="case编码">
+          <el-input v-model="addDependentForm.dependent_case_no"></el-input>
+        </el-form-item>
+        <el-form-item prop="dependent_key" label="依赖key">
+          <el-input v-model="addDependentForm.dependent_key"></el-input>
+        </el-form-item>
+        <el-form-item prop="dependent_res" label="依赖表达式">
+          <el-input v-model="addDependentForm.dependent_res"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addDependent">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -140,7 +172,25 @@ export default {
           { required: true, message: '请输入参数值', trigger: 'blur' }
         ]
       },
-      caseid: null
+      caseid: null,
+      addDialogVisible: false,
+      addDependentForm: {
+        dependent_case_no: '',
+        dependent_key: '',
+        dependent_res: ''
+      },
+      addDependentFormRule: {
+        case_no: [
+          { required: true, message: '请输测试用例编码', trigger: 'blur' }
+        ],
+        dependent_key: [
+          { required: true, message: '请输入key值', trigger: 'blur' }
+        ],
+        dependent_res: [
+          { required: true, message: '请输依赖表但是', trigger: 'blur' }
+        ]
+      },
+      dependentList: []
     }
   },
   created() {
@@ -174,12 +224,45 @@ export default {
         .get('case/' + id)
         .then(res => {
           this.editCaseForm = res.data
-          console.log(this.editCaseForm)
+          if (this.editCaseForm.is_dependent === true) {
+            this.getDependentCase(id)
+          }
         })
         .catch(error => {
           this.$message.error('获取测试用例详情失败')
           console.log(error)
         })
+    },
+    async getDependentCase(id) {
+      await this.$http
+        .get('case/dependent/get/' + id)
+        .then(res => {
+          this.dependentList = res.data.dependentcases
+          console.log(res.data)
+        })
+        .catch(error => {
+          this.$message.error('获取依赖值失败')
+          console.log(error)
+        })
+    },
+    addDependent() {
+      const id = this.$route.query.id
+      this.$refs.addDependentFormRef.validate(async valid => {
+        if (!valid) return
+        await this.$http
+          .post('case/dependent/' + id, this.addDependentForm)
+          .then(res => {
+            this.$message.success('添加依赖成功')
+            this.addDialogVisible = false
+            this.$refs.addDependentFormRef.resetFields()
+            this.getDependentCase(id)
+          })
+          .catch(error => {
+            this.$message.error('添加依赖失败')
+            this.$refs.addDependentFormRef.resetFields()
+            console.log(error)
+          })
+      })
     }
     // addSmokeCase() {
     //   this.$refs.addCaseFormRef.validate(async valid => {
