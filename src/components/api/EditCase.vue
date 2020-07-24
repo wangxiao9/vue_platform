@@ -77,8 +77,15 @@
                   <el-table-column prop="dependent_col" label="依赖key"></el-table-column>
                   <el-table-column prop="dependent_response_data" label="依赖表达式"></el-table-column>
                   <el-table-column label="操作">
-                    <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
-                    <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+                    <template slot-scope="scope">
+                      <el-button type="primary" icon="el-icon-edit" size="mini" disabled></el-button>
+                      <el-button
+                        type="danger"
+                        icon="el-icon-delete"
+                        size="mini"
+                        @click="deleteDependent(scope.row.id)"
+                      ></el-button>
+                    </template>
                   </el-table-column>
                 </el-table>
               </el-col>
@@ -114,7 +121,7 @@
       <el-divider></el-divider>
       <div class="footer">
         <el-button type="info" @click="cancle">取消</el-button>
-        <el-button type="primary">保存</el-button>
+        <el-button type="primary" disabled>保存</el-button>
       </div>
     </el-card>
     <!--添加依赖布局-->
@@ -180,7 +187,7 @@ export default {
         dependent_res: ''
       },
       addDependentFormRule: {
-        case_no: [
+        dependent_case_no: [
           { required: true, message: '请输测试用例编码', trigger: 'blur' }
         ],
         dependent_key: [
@@ -263,23 +270,36 @@ export default {
             console.log(error)
           })
       })
+    },
+    deleteDependent(id) {
+      const caseid = this.$route.query.id
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async valid => {
+          await this.$http
+            .delete(`case/dependent/${id}`)
+            .then(res => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.getDependentCase(caseid)
+            })
+            .catch(error => {
+              this.$message.error('删除失败')
+              console.log(error)
+            })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     }
-    // addSmokeCase() {
-    //   this.$refs.addCaseFormRef.validate(async valid => {
-    //     if (!valid) return
-    //     await this.$http
-    //       .post('add/case', this.addCaseForm)
-    //       .then(res => {
-    //         this.$message.success('添加接口测试用例成功')
-    //         this.cancle()
-    //       })
-    //       .catch(error => {
-    //         this.$message.error('添加接口测试用例失败')
-    //         this.$refs.addCaseFormRef.resetFields()
-    //         console.log(error)
-    //       })
-    //   })
-    // }
   }
 }
 </script>

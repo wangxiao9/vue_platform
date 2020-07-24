@@ -299,6 +299,35 @@ export default {
           this.$message.error('添加测试集失败')
           console.log(error)
         })
+    },
+    // 删除case
+    deleteCase(id) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async valid => {
+          await this.$http
+            .delete(`delete/case/${id}`)
+            .then(res => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.getSmaokeCase(1)
+            })
+            .catch(error => {
+              this.$message.error('删除失败')
+              console.log(error)
+            })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     }
   }
 }
