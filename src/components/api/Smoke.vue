@@ -178,7 +178,8 @@ export default {
       set_id: null,
       totle: 0,
       case_total: 0,
-      fullscreen: false
+      fullscreen: false,
+      tag_id: 0
     }
   },
   created() {
@@ -224,6 +225,7 @@ export default {
      */
     getTabId(tag) {
       console.log(tag)
+      this.tag_id = tag.$attrs.setId
       this.getSmaokeCase(tag.$attrs.setId)
     },
     deleteCaseSet() {

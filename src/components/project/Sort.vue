@@ -45,7 +45,7 @@
               type="danger"
               icon="el-icon-delete"
               size="mini"
-            ></el-button>
+            @click="deleteType(scope.row.id)"></el-button>
             <el-button v-else type="danger" icon="el-icon-delete" size="mini" disabled></el-button>
           </template>
         </el-table-column>
@@ -200,6 +200,34 @@ export default {
     },
     closeDialog() {
       this.$refs.addTypeFormRef.resetFields()
+    },
+    deleteType(id) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async valid => {
+          await this.$http
+            .delete('type/' + id)
+            .then(res => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.getTypeList()
+            })
+            .catch(error => {
+              this.$message.error('删除失败')
+              console.log(error)
+            })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     }
   }
 }
